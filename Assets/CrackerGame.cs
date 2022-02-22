@@ -7,21 +7,21 @@ public class CrackerGame : MonoBehaviour
 {
     // Time
     public Text timerText;
-    private float endGameDeltaTime;
-    private float endGameTime = 20;
+    private float _endGameDeltaTime;
+    private float _endGameTime = 20;
     // Pins
     public Text firstPinText;
-    private int firstPinNumber;
-    private int firstPinStartNumber =5;
-    private int firstPinEndNumber = 4;
+    private int _firstPinNumber;
+    private int _firstPinStartNumber =5;
+    private int _firstPinEndNumber = 4;
     public Text secondPinText;
-    private int secondPinNumber;
-    private int secondPinStartNumber =8;
-    private int secondPinEndNumber = 9;
+    private int _secondPinNumber;
+    private int _secondPinStartNumber =8;
+    private int _secondPinEndNumber = 9;
     public Text thirdPinText;
-    private int thirdPinNumber;
-    private int thirdPinStartNumber =6;
-    private int thirdPinEndNumber = 7;
+    private int _thirdPinNumber;
+    private int _thirdPinStartNumber =6;
+    private int _thirdPinEndNumber = 7;
     // Panels
     public GameObject gamePanel;
     public GameObject endGamePanel;
@@ -30,7 +30,7 @@ public class CrackerGame : MonoBehaviour
     public Button hammerButton;
     public Button lockPickButton;
     // Game
-    private bool gameState;
+    private bool _gameState;
     public Text endGameText;
 
 
@@ -40,20 +40,10 @@ public class CrackerGame : MonoBehaviour
         ResetGame();
     }
 
-    private void TimeReset()
-    {
-        endGameDeltaTime = endGameTime;
-    }
-
-    private void TimeUpdate()
-    {
-        endGameDeltaTime = endGameDeltaTime - (Time.deltaTime);
-        timerText.text = Mathf.Round(endGameDeltaTime).ToString();
-    }
 
     public void ResetGame()
     {
-        // Обновляем панели, кнопку, состояние игры
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
         gamePanel.SetActive(true);
         endGamePanel.SetActive(false);
 
@@ -61,25 +51,51 @@ public class CrackerGame : MonoBehaviour
         hammerButton.interactable = true;
         lockPickButton.interactable = true;
 
-        gameState = true;
+        _gameState = true;
 
-        // Обновляем пины
-        PinUpdate(firstPinStartNumber, secondPinStartNumber, thirdPinStartNumber);
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+        PinUpdate(_firstPinStartNumber, _secondPinStartNumber, _thirdPinStartNumber);
 
-        // Перезапускаем время
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         TimeReset();
 
     }
 
+    public void DrillButtonClick()
+    {
+        PinUpdate(_firstPinNumber + 1, _secondPinNumber - 1, _thirdPinNumber);
+    }
+
+    public void HammerButtonClick()
+    {
+        PinUpdate(_firstPinNumber - 1, _secondPinNumber + 2, _thirdPinNumber - 1);
+    }
+
+    public void LockpiickButtonClick()
+    {
+        PinUpdate(_firstPinNumber - 1, _secondPinNumber + 1, _thirdPinNumber + 1);
+    }
+
+    private void TimeReset()
+    {
+        _endGameDeltaTime = _endGameTime;
+    }
+
+    private void TimeUpdate()
+    {
+        _endGameDeltaTime = _endGameDeltaTime - (Time.deltaTime);
+        timerText.text = Mathf.Round(_endGameDeltaTime).ToString();
+    }
+
     private void PinUpdate(int first, int second, int third)
     {
-        firstPinNumber = PinUpdateChanger(first);
-        secondPinNumber = PinUpdateChanger(second);
-        thirdPinNumber = PinUpdateChanger(third);
+        _firstPinNumber = PinUpdateChanger(first);
+        _secondPinNumber = PinUpdateChanger(second);
+        _thirdPinNumber = PinUpdateChanger(third);
 
-        firstPinText.text = $"{firstPinNumber}";
-        secondPinText.text = $"{secondPinNumber}";
-        thirdPinText.text = $"{thirdPinNumber}";
+        firstPinText.text = $"{_firstPinNumber}";
+        secondPinText.text = $"{_secondPinNumber}";
+        thirdPinText.text = $"{_thirdPinNumber}";
     }
 
     private int PinUpdateChanger(int newPin)
@@ -98,22 +114,6 @@ public class CrackerGame : MonoBehaviour
         }
     }
 
-    public void DrillButtonClick()
-    {
-        PinUpdate(firstPinNumber + 1, secondPinNumber - 1, thirdPinNumber);
-    }
-
-    public void HammerButtonClick()
-    {
-        PinUpdate(firstPinNumber - 1, secondPinNumber + 2, thirdPinNumber - 1);
-    }
-
-    public void LockpiickButtonClick()
-    {
-        PinUpdate(firstPinNumber - 1, secondPinNumber + 1, thirdPinNumber + 1);
-    }
-
-
     private void EndGame(string endText)
     {
         endGamePanel.SetActive(true);
@@ -123,29 +123,29 @@ public class CrackerGame : MonoBehaviour
         hammerButton.interactable = false;
         lockPickButton.interactable = false;
 
-        gameState = false;
+        _gameState = false;
     }
 
 
     private bool PlayerWinCheck()
     {
-        return firstPinNumber == firstPinEndNumber && secondPinNumber == secondPinEndNumber && thirdPinNumber == thirdPinEndNumber;
+        return _firstPinNumber == _firstPinEndNumber && _secondPinNumber == _secondPinEndNumber && _thirdPinNumber == _thirdPinEndNumber;
     }
 
     void Update()
     {
 
-        if (gameState is true)
+        if (_gameState is true)
         {
             TimeUpdate();
 
             if (PlayerWinCheck())
             {
-                EndGame("Вы выиграли!");
+                EndGame("пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!");
             }
-            else if ((endGameDeltaTime) <= 0)
+            else if ((_endGameDeltaTime) <= 0)
             {
-                EndGame("Вы проиграли!");
+                EndGame("пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!");
             }
         }
         
